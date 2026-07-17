@@ -20,7 +20,10 @@ Evidence docs (in `reference/`) plus version-specific gotchas the docs don't cov
 
 1. **`GOTCHAS.md`** — always read it before writing a page or component. It pins the
    framework versions (Svelte **4**, Tailwind **3**, DuckDB SQL) and lists the syntax
-   traps. Getting the Svelte/Tailwind version wrong is the #1 failure mode.
+   traps. Getting the Svelte/Tailwind version wrong is the #1 failure mode. Two companion
+   files hold the deeper, occasional material (read on demand, linked from GOTCHAS):
+   **`advanced-components.md`** (custom-component mechanics + rare build traps) and
+   **`slide-decks.md`** (building presentation decks).
 2. **`CORRECTIONS.md`** — hand-maintained fixes for places the generated `reference/`
    is wrong or incomplete. If it contradicts a `reference/` table, CORRECTIONS wins.
 3. Then open the specific `reference/` file(s) for what you're building (index below).

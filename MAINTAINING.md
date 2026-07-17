@@ -23,7 +23,9 @@ structurally impossible.
 | Path | Hand-maintained? | Notes |
 |------|------------------|-------|
 | `SKILL.md` | yes | Entry point Claude auto-loads. |
-| `GOTCHAS.md` | yes | Version pins + pitfalls learned while building. Grows often. |
+| `GOTCHAS.md` | yes | Version pins + core pitfalls; **always read**. Keep it lean. |
+| `advanced-components.md` | yes | Deeper custom-component mechanics + rare build traps. Read on demand. |
+| `slide-decks.md` | yes | The slide-deck feature. Read on demand. |
 | `CORRECTIONS.md` | yes | Fixes where generated `reference/` is wrong/incomplete. Wins over `reference/`. |
 | `reference/` | **no — generated** | `sync-docs.mjs` output. Never hand-edit. |
 | `scripts/sync-docs.mjs` | yes | Transforms `sites/docs/pages` → `reference/`. |
@@ -34,8 +36,10 @@ structurally impossible.
 
 ## Maintenance loop
 
-- **GOTCHAS / CORRECTIONS** (the common case) — just edit and commit; they need nothing
-  from the docs:
+- **GOTCHAS / advanced-components / slide-decks / CORRECTIONS** (the common case) — just
+  edit and commit; they need nothing from the docs. Put new gotchas in the right file and
+  distill into a themed section rather than appending a raw dated log (keep `GOTCHAS.md`
+  lean — it's read on every task):
   ```bash
   git -C .claude/skills/evidence-dashboards commit -am "gotcha: ..." && git push
   ```
