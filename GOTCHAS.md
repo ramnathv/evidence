@@ -228,11 +228,6 @@ file it is documenting a prop — never copy it into a dashboard page.
 When you hit real friction building a dashboard, append a dated bullet so the skill
 learns. Keep each entry to the symptom + the fix.
 
-- **2026-07-14** — Importing a project `components/` `.svelte` file via a page `<script>`
-  block (`import X from '../components/X.svelte'`) errored. Evidence already auto-registers
-  everything in `components/` as a global component; the explicit import double-registers
-  it. Fix: delete the import and just use the tag. (See "Custom Svelte components" above.)
-
 - **2026-07-14** — **Base path (`deployment.basePath`) + links.** With a base path set,
   the two kinds of links behave DIFFERENTLY, and getting it wrong yields either a
   double slash (`/base//foo`) or a missing base (`/foo` → "did you mean /base/foo?"):
@@ -248,38 +243,6 @@ learns. Keep each entry to the symptom + the fix.
     double-adjust, which is why hardcoding the base here is correct.)
   - The user prefers hardcoding the base in SQL over importing `addBasePath` in a
     `<script>` (they dislike JS on pages). Honor that.
-
-- **2026-07-14** — A `<Slider>` value read as `${inputs.growth.value}` came back wrong;
-  a Slider is accessed **bare** as `${inputs.growth}`. Input value access depends on the
-  component type. Added the per-type table above ("Input value access depends on the
-  input TYPE").
-
-- **2026-07-14** — A templated page with `title: "{params.category}"` in frontmatter
-  showed the literal text `{params.category}` in the tab/breadcrumb. Frontmatter is static
-  YAML and never interpolates. Fix: drop the dynamic `title` and use a body `# {params.x}`
-  heading (which does interpolate). See "Frontmatter does NOT interpolate" above.
-
-- **2026-07-14** — **TextInput value is accessed BARE** (`inputs.search`), NOT `.value` —
-  the prop table's `.value` is wrong; the docs' own SQL example and real behavior both use
-  bare. (I flip-flopped on this mid-session; bare is correct.) Also: the page appeared
-  **blocked on first load** — not because of the SQL (empty renders as `''`, matching
-  all), but because a `TextInput` with **no `defaultValue`** has no initial value, and
-  Evidence holds every query that references it until it does. Fix: give it (and any
-  referenced input) an initial value — for TextInput, `defaultValue="…"`. See the "input
-  with no initial value blocks the queries" note above. (My first attempt — a SQL
-  `in ('', 'undefined')` guard — was the wrong fix and was removed.)
-
-- **2026-07-15** — Packaged `components/` into a **local component plugin** (`file:` dep +
-  `evidence.config.yaml` registration) — works; components used by tag, no import. Recipe
-  banked in "Recipe: package components as a local plugin".
-
-- **2026-07-15** — **Client-side runtime SQL from a component** confirmed rendering: a custom
-  `<AskData>` ran LLM-stubbed SQL via `query` from `@evidence-dev/universal-sql/client-duckdb`
-  against the in-browser DuckDB and auto-rendered it — no backend. Recipe banked in the T0
-  SDK-seam section. Along the way: **a function call in a `$:` statement must take its
-  reactive inputs as arguments** (`$: kind = pick(rows, cols)`, not `pick()`) or Svelte
-  can't order it and it runs while `rows` is `undefined` → throws. Banked in the Svelte 4
-  section.
 
 - **2026-07-15** — **A literal `` `<script>` `` in a markdown code span breaks the whole
   page build** with a misleading `ParseError: Unexpected </script>` / `(unexpected-eof)`,
