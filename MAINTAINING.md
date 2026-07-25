@@ -50,8 +50,8 @@ structurally impossible.
   ```
   New enum gaps flagged by the audit → add a note to `CORRECTIONS.md`.
 
-To pull fresh upstream docs first, update the fork's `next` (the main working tree stays
-on `next`), then run `refresh.sh` — it reads `sites/docs/pages` from that tree.
+To pull fresh upstream docs first, update the fork's `main` (the main working tree stays
+on `main`), then run `refresh.sh` — it reads `sites/docs/pages` from that tree.
 
 ## Footguns
 
@@ -62,7 +62,7 @@ on `next`), then run `refresh.sh` — it reads `sites/docs/pages` from that tree
   two worktrees anyway. Work on it only via this worktree.
 - **Moving/deleting the worktree** dangles the `~/.claude` symlink. Remove it properly
   with `git worktree remove`, not `rm -rf`.
-- `/.claude/` is in the fork's `.git/info/exclude` so `next` stays clean; keep it there.
+- `/.claude/` is in the fork's `.git/info/exclude` so `main` stays clean; keep it there.
 
 ## Recreate on a new machine
 
