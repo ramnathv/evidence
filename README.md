@@ -47,8 +47,11 @@ Maintained as a git worktree checked out inside the Evidence fork at
 # refresh reference/ after upstream docs change (docs are auto-located in the fork):
 node scripts/sync-docs.mjs
 node scripts/detect-gaps.mjs        # → CORRECTIONS.md candidates
-git add -A && git commit -m "..." && git push
+git add reference/ && git commit -m "..." && git push
 ```
 
-`GOTCHAS.md` / `CORRECTIONS.md` are updated by hand as you build dashboards; they need
-nothing from the docs.
+Stage explicit paths, never `git add -A`: this worktree is shared by every session that
+loads the skill, so `git status` may show another session's unfinished work.
+
+`CORRECTIONS.md` is updated by hand as you build dashboards; new gotchas go to
+`GOTCHAS/inbox/` (see `MAINTAINING.md`). Neither needs anything from the docs.

@@ -23,7 +23,8 @@ structurally impossible.
 | Path | Hand-maintained? | Notes |
 |------|------------------|-------|
 | `SKILL.md` | yes | Entry point Claude auto-loads. |
-| `GOTCHAS.md` | yes | Version pins + core pitfalls; **always read**. Keep it lean. |
+| `GOTCHAS.md` | yes | Version pins + core pitfalls; **always read**. Keep it lean. Edit via the inbox, not directly. |
+| `GOTCHAS/inbox/` | yes | Append-only drop-box for new findings; consolidated into the files above, then deleted. Not in the always-read path. |
 | `advanced-components.md` | yes | Deeper custom-component mechanics + rare build traps. Read on demand. |
 | `slide-decks.md` | yes | The slide-deck feature. Read on demand. |
 | `CORRECTIONS.md` | yes | Fixes where generated `reference/` is wrong/incomplete. Wins over `reference/`. |
@@ -36,17 +37,28 @@ structurally impossible.
 
 ## Maintenance loop
 
-- **GOTCHAS / advanced-components / slide-decks / CORRECTIONS** (the common case) — just
-  edit and commit; they need nothing from the docs. Put new gotchas in the right file and
-  distill into a themed section rather than appending a raw dated log (keep `GOTCHAS.md`
-  lean — it's read on every task):
+- **New gotcha** (the common case) — don't edit `GOTCHAS.md` and friends directly; drop a
+  fragment in the inbox. Costs no context (nothing links to it) and can't collide with
+  another session:
   ```bash
-  git -C .claude/skills/evidence-dashboards commit -am "gotcha: ..." && git push
+  # write GOTCHAS/inbox/YYYY-MM-DD-<session>-<slug>.md — template in that dir's README
+  cd .claude/skills/evidence-dashboards
+  git add GOTCHAS/inbox/2026-07-25-ab12cd-datatable-link.md && git commit -m "inbox: ..." && git push
+  ```
+- **Consolidation pass** — at 5+ fragments, or before any push touching `GOTCHAS.md`: fold
+  fragments into the right file, distilling into themed sections rather than appending a
+  dated log (keep `GOTCHAS.md` lean — it's read on every task), and `git rm` them in the
+  same commit. Full procedure in `GOTCHAS/inbox/README.md`.
+- **CORRECTIONS / companion files** — edit and commit directly; they need nothing from the
+  docs. Stage explicit paths:
+  ```bash
+  git -C .claude/skills/evidence-dashboards add CORRECTIONS.md
+  git -C .claude/skills/evidence-dashboards commit -m "corrections: ..." && git push
   ```
 - **Refresh `reference/`** (rare — only when upstream docs change):
   ```bash
   ./scripts/refresh.sh          # from the skill folder; auto-locates sites/docs/pages
-  # review, then: git add -A && git commit -m "refresh reference" && git push
+  # review, then: git add reference/ && git commit -m "refresh reference" && git push
   ```
   New enum gaps flagged by the audit → add a note to `CORRECTIONS.md`.
 
@@ -55,6 +67,12 @@ on `main`), then run `refresh.sh` — it reads `sites/docs/pages` from that tree
 
 ## Footguns
 
+- **Never `git add -A` / `git commit -am` in this worktree — stage explicit paths.**
+  Every session using the skill writes to this one physical tree, including sessions in
+  unrelated repos, so `git status` may show work you didn't author and that isn't finished.
+  Blanket staging silently commits it into your change. Check `git status` before every
+  commit and leave anything that isn't yours. (This has already come close to happening: a
+  branch-rename commit nearly swallowed an in-flight rewrite of the base-path section.)
 - **Never `git clean -x` (or `-X`) in the fork.** The worktree is nested under the
   main tree's excluded `.claude/`; `-x` ignores excludes and would delete the worktree's
   working files. Commits are safe in `.git`, but you'd have to re-checkout.
